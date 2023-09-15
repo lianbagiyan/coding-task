@@ -1,0 +1,87 @@
+1. Creating separate CSS files for each component. This approach follows the principles of encapsulation,
+where styles are scoped to a specific component and do not leak or interfere with other components.
+
+2. Will be good to use destructuring. This can make code cleaner and more readable.
+
+Example: In WatchLater component we have this:
+         const state = useSelector((state) => state)
+         const { watchLater } = state
+
+   After we use "watchLaterMovies" everywhere in this way: watchLater.watchLaterMovies
+
+   We can use this structure:
+   const { watchLaterMovies } = useSelector((state) => state.watchLater);
+
+   (I fixed it for Movie, Starred, WatchLater components also)
+
+3. For YoutubePlayer we use "react-player" which bundle size is 18.8kB, would try to find something lighter(for example "react-youtube" 5.9kB).
+
+4. I prefer use CSS classes or styles for setting CSS properties instead of inline styles.
+It makes code more maintainable.
+
+Example: <div style={{ padding: "30px" }}>
+            <h6>no trailer available. Try another movie</h6>
+         </div>
+
+5. Exposing API keys publicly is a significant security risk. In our project we can fix it using packages like dotenv.
+
+6. We have this function in our project:
+    const myClickHandler = (e) => {
+            if (!e) var e = window.event
+            e.cancelBubble = true
+            if (e.stopPropagation) e.stopPropagation()
+            e.target.parentElement.parentElement.classList.remove('opened')
+        }
+
+ This function is not good and readable(and function name):
+       - "window.event" and "e.cancelBubble" are not commonly used in modern JavaScript
+       - unnecessary check for !e (e parameter will always be present when the click event occurs)
+
+ This is more readable:
+       const myClickHandler = (e) => {
+               e.stopPropagation();
+               const parentElement = e.target.parentElement.parentElement;
+               parentElement.classList.remove('opened');
+           }
+
+7. But also in Movie.jsx component we have this button:
+   <button type="button" className="close" onClick={(e) => myClickHandler(e)} aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+   </button>
+
+The presence of this element is irrelevant, if it is intended for the movie modal X. We can remove it.
+
+8. We can also delete the closeCard() function. It performs no function.
+
+9. It would be great if Prettier & Eslint were added to the project.
+
+10. When using map(), we pass id as key, which we have to make sure is unique.
+
+    Example: In Movies component we pass movie.id like key, but in console we get error(Each child in a list should have a unique "key" prop)
+
+        {movies.movies?.map((movie) => {
+                        return (
+                            <Movie
+                                movie={movie}
+                                key={movie.id}
+                                viewTrailer={viewTrailer}
+                                closeCard={closeCard}
+                            />
+                        )
+                    })}
+
+We can solve this problem using a unique identifier(for example key={movie.id+movie.poster_path}).
+
+11. In Movie component we have such as part:
+    <span className="btn-star" data-testid="starred-link" onClick={() =>
+      dispatch(starMovie({
+         id: movie.id,
+         overview: movie.overview,
+         release_date: movie.release_date?.substring(0, 4),
+         poster_path: movie.poster_path,
+         title: movie.title
+      })
+    )}>
+
+We need to make sure, that "movie" is not null or undefined, I suggest to do the following:
+   const { id, overview, release_date, poster_path, title } = movie || {}

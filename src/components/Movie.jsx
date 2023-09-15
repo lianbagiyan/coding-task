@@ -3,7 +3,7 @@ import starredSlice from '../data/starredSlice'
 import watchLaterSlice from '../data/watchLaterSlice'
 import placeholder from '../assets/not-found-500X750.jpeg'
 
-const Movie = ({ movie, viewTrailer, closeCard }) => {
+const Movie = ({ movie, viewTrailer }) => {
     const starredMovies = useSelector(state => state.starred.starredMovies);
     const watchLaterMovies = useSelector(state => state.watchLater.watchLaterMovies);
     const { starMovie, unstarMovie } = starredSlice.actions

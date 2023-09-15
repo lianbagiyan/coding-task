@@ -32,10 +32,6 @@ const App = () => {
   const { observe } = useInfiniteScroll(loadNewMovies);
 
   const closeModal = () => setOpen(false)
-  
-  const closeCard = () => {
-
-  }
 
   const getSearchResults = (query) => {
     if (query !== '') {
@@ -106,7 +102,7 @@ const App = () => {
 
       <div className="container">
         <Routes>
-          <Route path="/" element={<Movies movies={movies} viewTrailer={viewTrailer} closeCard={closeCard} />} />
+          <Route path="/" element={<Movies movies={movies} viewTrailer={viewTrailer} />} />
           <Route path="/starred" element={<Starred viewTrailer={viewTrailer} />} />
           <Route path="/watch-later" element={<WatchLater viewTrailer={viewTrailer} />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />
