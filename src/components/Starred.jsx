@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
+import {memo} from 'react'
 import { Link } from 'react-router-dom'
 import starredSlice from '../data/starredSlice'
 import Movie from './Movie'
@@ -37,4 +38,4 @@ const Starred = ({viewTrailer}) => {
   )
 }
 
-export default Starred
+export default memo(Starred)

@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
+import {memo} from 'react'
 import { Link } from 'react-router-dom'
 import watchLaterSlice from '../data/watchLaterSlice'
 import Movie from './Movie'
@@ -37,4 +38,4 @@ const WatchLater = ({viewTrailer}) => {
   )
 }
 
-export default WatchLater
+export default memo(WatchLater)

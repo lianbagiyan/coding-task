@@ -85,3 +85,12 @@ We can solve this problem using a unique identifier(for example key={movie.id+mo
 
 We need to make sure, that "movie" is not null or undefined, I suggest to do the following:
    const { id, overview, release_date, poster_path, title } = movie || {}
+
+12. The functions that are part of the useEffect and depend on them, or functions that we pass to Child components for example,
+wrap useCallback hooks with.
+
+Example: viewTrailer & getMovie functions
+
+and the components(Movies, Starred, WatchLater in my case) that are passed to take those functions in the memo()
+(While useCallback can optimize specific function references, memo optimizes the entire component's rendering)
+13. And it would be great to write test cases.

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import {useEffect, useState, useRef, useCallback} from 'react'
 import { Routes, Route, createSearchParams, useSearchParams, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
@@ -25,13 +25,16 @@ const App = () => {
   const navigate = useNavigate()
 
   const pageNumber = useRef(1);
-  const loadNewMovies = () => {
+  const loadNewMovies = useCallback(() => {
     pageNumber.current++;
     dispatch(fetchMovies(`${ENDPOINT_DISCOVER}&page=${pageNumber.current}`));
-  };
+  }, [dispatch]);
+
   const { observe } = useInfiniteScroll(loadNewMovies);
 
-  const closeModal = () => setOpen(false)
+  const closeModal = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   const getSearchResults = (query) => {
     if (query !== '') {
@@ -56,24 +59,22 @@ const App = () => {
     }
   }
 
-  const viewTrailer = (movie) => {
-    getMovie(movie.id)
-    if (!videoKey) setOpen(true)
-    setOpen(true)
-  }
+  const getMovie = useCallback(async (id) => {
+    const URL = `${ENDPOINT}/movie/${id}?api_key=${API_KEY}&append_to_response=videos`;
 
-  const getMovie = async (id) => {
-    const URL = `${ENDPOINT}/movie/${id}?api_key=${API_KEY}&append_to_response=videos`
-
-    setVideoKey(null)
-    const videoData = await fetch(URL)
-      .then((response) => response.json())
+    setVideoKey(null);
+    const videoData = await fetch(URL).then((response) => response.json());
 
     if (videoData.videos && videoData.videos.results.length) {
-      const trailer = videoData.videos.results.find(vid => vid.type === 'Trailer')
-      setVideoKey(trailer ? trailer.key : videoData.videos.results[0].key)
+      const trailer = videoData.videos.results.find((vid) => vid.type === 'Trailer');
+      setVideoKey(trailer ? trailer.key : videoData.videos.results[0].key);
     }
-  }
+  }, [setVideoKey]);
+
+  const viewTrailer = useCallback((movie) => {
+    getMovie(movie.id);
+    if (!videoKey) setOpen(true);
+  }, [getMovie, videoKey]);
 
   useEffect(() => {
     const lastWrapper = document.querySelector(".wrapper:last-child");
