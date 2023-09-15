@@ -11,6 +11,22 @@
         text-decoration: none;
     }
 
+    .movies-container {
+        //solution with Flex model
+        //display: flex;
+        //flex-direction: row;
+        //flex-wrap: wrap;
+
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+        .wrapper {
+            width: 100%;
+            padding: 0 6px;
+            margin-bottom: 2rem;
+        }
+    }
+
     .wrapper {
         padding: 0 6px;
         margin-bottom: 2rem;
