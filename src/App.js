@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Routes, Route, createSearchParams, useSearchParams, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
@@ -11,6 +11,7 @@ import WatchLater from './components/WatchLater'
 import './app.scss'
 import Modal from "./components/Modal";
 import {Portal} from "./components/Portal";
+import useInfiniteScroll from "./hooks/useInfiniteScroll";
 
 const App = () => {
 
@@ -22,7 +23,14 @@ const App = () => {
   const [videoKey, setVideoKey] = useState()
   const [isOpen, setOpen] = useState(false)
   const navigate = useNavigate()
-  
+
+  const pageNumber = useRef(1);
+  const loadNewMovies = () => {
+    pageNumber.current++;
+    dispatch(fetchMovies(`${ENDPOINT_DISCOVER}&page=${pageNumber.current}`));
+  };
+  const { observe } = useInfiniteScroll(loadNewMovies);
+
   const closeModal = () => setOpen(false)
   
   const closeCard = () => {
@@ -70,6 +78,14 @@ const App = () => {
       setVideoKey(trailer ? trailer.key : videoData.videos.results[0].key)
     }
   }
+
+  useEffect(() => {
+    const lastWrapper = document.querySelector(".wrapper:last-child");
+
+    if (lastWrapper) {
+      observe(lastWrapper);
+    }
+  }, [observe]);
 
   useEffect(() => {
     getMovies()
