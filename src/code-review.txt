@@ -93,4 +93,17 @@ Example: viewTrailer & getMovie functions
 
 and the components(Movies, Starred, WatchLater in my case) that are passed to take those functions in the memo()
 (While useCallback can optimize specific function references, memo optimizes the entire component's rendering)
-13. And it would be great to write test cases.
+
+13. The searchMovies() function needs a review, it's misspelled(we won't need to use Link here I think:
+        <Link to="/" onClick={(e) => searchMovies('')} className="search-link" >
+          <input type="search" data-testid="search-movies"
+            onKeyUp={(e) => searchMovies(e.target.value)}
+            className="form-control rounded"
+            placeholder="Search movies..."
+            aria-label="Search movies"
+            aria-describedby="search-addon"
+            />
+        </Link>
+)
+
+14. And it would be great to write test cases(unfortunately I don't have experience).
